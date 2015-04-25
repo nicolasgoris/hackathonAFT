@@ -4,7 +4,7 @@ angular.module('starter.services', [])
 	$rootScope.key = 'ndirmrstimeatcheringplec';
 	$rootScope.pass = 'Xa3utsiV0mbi8qI3HAp6UYKa';
 	$rootScope.db = 'https://' + $rootScope.key + ':' + $rootScope.pass + '@nicolas.cloudant.com/hackathonatf/';
-   $rootScope.content = '_design/views/_view/TypeData?key=';
+    $rootScope.content = '_design/views/_view/TypeData?key=';
 	$rootScope.reservations = '_design/views/_view/reservations?key=';
 	return {
 		getDBContent: function(type) {

@@ -25,6 +25,8 @@ angular.module('starter.controllers', [])
 		.success(function (data) {
 		$scope.devices = data.rows;
 	});*/
+	$scope.now = new Date().toISOString().split('T')[0];
+	$scope.mindate = $scope.now;
 	$scope.data = [];
 	$scope.types = [];
 	$scope.devices = [];
@@ -33,15 +35,25 @@ angular.module('starter.controllers', [])
 		$scope.$apply(function() {
 			$scope.data = data.rows[0];
 			$.each($scope.data.value, function(key, value) {
-				$scope.types.push(value.type);
+				$scope.types.push(capitalize(value.type));
 			});
 		});
 	});
+	function capitalize(string){
+		var newString = string;
+		if (itemIsLowerCaseLetter(string.charAt(0))){
+			newString = string.charAt(0).toUpperCase() + string.substring(1, string.length);
+		}
+		return newString;
+	}
+	function itemIsLowerCaseLetter(item) {
+        return item.toUpperCase().toLowerCase() === item;
+    };
 	$("select[name='devicetype']").change(function() {
 		var devicetype = $( this ).val();
 		$scope.devices = [];
 		$.each($scope.data.value, function(key, value) {
-			if (value.type == devicetype) {
+			if (value.type == devicetype.toLowerCase()) {
 				$.each(value.devices, function(key, value) {
 					if (value.available) {
 						$scope.devices.push(value);
@@ -50,6 +62,26 @@ angular.module('starter.controllers', [])
 			}
 		});
 	});
+	$scope.startFilled = function(){
+		if($scope.newReservation.startDate != undefined){
+			var date = $scope.newReservation.startDate;
+			date.setDate(date.getDate()+1);
+			$scope.mindate = date.toISOString().split('T')[0];
+		}
+		else {
+			$scope.newReservation.endDate = undefined;
+			$scope.mindate = $scope.now;
+		}
+	};
+	$scope.saveReservation = function(){
+		var date = $scope.newReservation.endDate;
+		date.setDate(date.getDate()+1);
+		$scope.reservation = [];
+		$scope.reservation.startDate = $scope.newReservation.startDate.toISOString().split('T')[0];
+		$scope.reservation.endDate = date.toISOString().split('T')[0];
+		$scope.reservation.device = $scope.newReservation.actualDevice;
+		console.log($scope.reservation);
+	};
 })
 
 .controller('ChatsCtrl', function($scope, Chats) {
