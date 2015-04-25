@@ -2,7 +2,15 @@ angular.module('starter.controllers', [])
 
 .controller('DashCtrl', function($scope) {
 	$scope.services = {"computers":true, "laptops":true, "videocameras":false, "studyplaces":true};
+	$scope.today = new Date();
 	$scope.news = [
+		 {
+           "startdate": "2015-04-23",
+           "enddate": "2015-04-24",
+           "title": "wie maakte de laptops kapot?",
+           "text": "lala",
+           "img": ""
+       },
        {
            "startdate": "2015-04-24",
            "enddate": "2015-04-25",
@@ -17,7 +25,17 @@ angular.module('starter.controllers', [])
            "text": "we hebben de laptops vorig weekend eens nagekeken en hebben vast gesteld dat er ongeveer een 5 tal laptops kapot zijn. We hebben nagetrokken wie dit zouden zijn maar we willen deze personen graag de kans geven om hier zelf voor uit te komen.",
            "img": ""
        }
-   ]
+   ];
+	var news = [];
+	$.each($scope.news, function(key, value) {
+		var startdate = new Date(value.startdate);
+		var enddate = new Date(value.enddate);
+		enddate.setDate(enddate.getDate()+1);
+		if ($scope.today > startdate && $scope.today < enddate) {
+			news.push(value);
+		}
+	});
+	$scope.news = news;
 })
 
 .controller('ReservationCtrl', function($scope, $http, DataBase) {
