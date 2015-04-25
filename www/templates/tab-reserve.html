@@ -1,69 +1,28 @@
 <ion-view view-title="Reserve">
-  <ion-content class="padding">
-  
-  <select name="devicetype" ng-model="newReservation.deviceType">
-	<option value="device.type for device in laptops">Laptop</option>
-	<option value="device.type for device in tablets">Tablet</option>
-  </select>
-  <div>{{newReservation.deviceType}}</div>
-  <select name="actualdevice" ng-model="newReservation.actualDevice" ng-options="device.type group by device.type for device in laptops">
-  </select>
-  <div>{{newReservation.actualDevice}}</div>
-  
-    <div class="list card">
-      <div class="item item-divider">Services</div>
-      <div class="item item-body">
-			<div class="list">
-				<a class="item item-icon-left item-icon-right" href="#">
-					<i class="icon ion-monitor"></i>
-					Reservation computers
-					<i class="icon ion-checkmark-round icon-green"></i>
-				</a>
-				<a class="item item-icon-left item-icon-right" href="#">
-					<i class="icon ion-laptop"></i>
-					Reservation laptops
-					<i class="icon ion-checkmark-round icon-green"></i>
-				</a>
-				<a class="item item-icon-left item-icon-right" href="#">
-					<i class="icon ion-videocamera"></i>
-					Reservation cameras
-					<i class="icon ion-close-round icon-red"></i>
-				</a>
-				<a class="item item-icon-left item-icon-right" href="#">
-					<i class="icon ion-clipboard"></i>
-					Reservation study room
-					<i class="icon ion-checkmark-round icon-green"></i>
-				</a>
+	<ion-content class="padding">
+	
+	<div class="list">
+		<label class="item item-input item-select">
+			<div class="input-label">
+				Device Type
 			</div>
-      </div>
-    </div>
-    <div class="list card">
-      <div class="item item-divider">News</div>
-      <div class="item item-body">
-        <div class="list">
-				<a class="item item-icon-left" href="#">
-					<i class="icon ion-information-circled"></i>
-					New reservation tools
-				</a>
+		<select name="devicetype" ng-model="newReservation.deviceType">
+			<option ng-repeat="type in types" value="{{type}}">{{type}}</option> <!-- ToDO: first letter capatalize -->
+		</select>
+	</label>
+	</div>
+	<div class="list" ng-show="newReservation.deviceType != undefined">
+		<label class="item item-input item-select">
+			<div class="input-label">
+				Device
 			</div>
-      </div>
-    </div>
-    <div class="list card">
-      <div class="item item-divider">Reservations</div>
-      <div class="item item-body">
-        <div class="list">
-				<a class="item item-icon-left" href="#">
-					<i class="icon ion-arrow-right-b"></i>
-					Current reservations
-					<span class="badge badge-balanced">1</span>
-				</a>
-				<a class="item item-icon-left" href="#">
-					<i class="icon ion-arrow-left-b"></i>
-					Passed reservations
-					<span class="badge badge-assertive">2</span>
-				</a>
-			</div>
-      </div>
-    </div>
+		<select name="actualdevice" ng-model="newReservation.actualDevice"
+			ng-options="device.name for device in devices">
+
+			<!--<option ng-repeat="device in devices" value="{{ device.id }}">{{ device.name }}</option>-->
+		</select>
+	</label>
+	</div>
+	<div>{{newReservation.actualDevice}}</div>
   </ion-content>
 </ion-view>

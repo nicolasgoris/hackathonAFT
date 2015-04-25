@@ -1,71 +1,20 @@
 angular.module('starter.services', [])
 
-.factory('Devices', function() {
-
-	//fake device data
-	//fake device data
-  var laptops = [{
-		id: 0,
-		type: 'dell',
-		available: true
-		}, {
-		id: 1,
-		type: 'dell',
-		available: true
-		}, {
-		id: 2,
-		type: 'dell',
-		available: false
-		}, {
-		id: 3,
-		type: 'hp',
-		available: true
-		}, {
-		id: 4,
-		type :'hp',
-		available: true
-		}, {
-		id: 5,
-		type: 'hp',
-		available: false
-		}];
-	var tablets = [{
-		id: 6,
-		type: 'ipad',
-		available: true
-		}, {
-		id: 7,
-		type: 'ipad',
-		available: true
-		}, {
-		id: 8,
-		type: 'ipad',
-		available: false
-		}, {
-		id: 9,
-		type: 'nexus',
-		available: true
-		}, {
-		id: 10,
-		type: 'nexus',
-		available: true
-		}, {
-		id: 11,
-		type: 'nexus',
-		available: false
-		}];
-		
+.factory('DataBase', function($rootScope) {
+	$rootScope.key = 'ndirmrstimeatcheringplec';
+	$rootScope.pass = 'Xa3utsiV0mbi8qI3HAp6UYKa';
+	$rootScope.db = 'https://' + $rootScope.key + ':' + $rootScope.pass + '@nicolas.cloudant.com/hackathonatf/';
+   $rootScope.content = '_design/views/_view/TypeData?key=';
+	$rootScope.reservations = '_design/views/_view/reservations?key=';
 	return {
-		all: function(){
-		return laptops;
+		getDBContent: function(type) {
+			return $rootScope.db + $rootScope.content + '"' + type + '"&callback=?';
 		},
-		some: function(){
-		return tablets;
+		getReservations: function(snumber) {
+			return $rootScope.db + $rootScope.reservations + '"' + snumber + '"&callback=?';
 		}
-	}
-	})
-		
-		
+	};
+})
 
 .factory('Chats', function() {
   // Might use a resource here that returns a JSON array
