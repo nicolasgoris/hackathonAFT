@@ -5,6 +5,11 @@ angular.module('starter.controllers', [])
 	$scope.news = [{"title": "hello world", "body": "nieuws test", "startDate": "15 jan","endDate":"16jan"},{"title": "hello world", "body": "nieuws test", "startDate": "15 jan","endDate":"16jan"}]
 })
 
+.controller('ReserveCtrl', function($scope, Devices) {
+	$scope.laptops = Devices.all();
+	$scope.tablets = Devices.some();
+})
+
 .controller('ChatsCtrl', function($scope, Chats) {
   $scope.chats = Chats.all();
   $scope.remove = function(chat) {

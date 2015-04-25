@@ -1,5 +1,72 @@
 angular.module('starter.services', [])
 
+.factory('Devices', function() {
+
+	//fake device data
+	//fake device data
+  var laptops = [{
+		id: 0,
+		type: 'dell',
+		available: true
+		}, {
+		id: 1,
+		type: 'dell',
+		available: true
+		}, {
+		id: 2,
+		type: 'dell',
+		available: false
+		}, {
+		id: 3,
+		type: 'hp',
+		available: true
+		}, {
+		id: 4,
+		type :'hp',
+		available: true
+		}, {
+		id: 5,
+		type: 'hp',
+		available: false
+		}];
+	var tablets = [{
+		id: 6,
+		type: 'ipad',
+		available: true
+		}, {
+		id: 7,
+		type: 'ipad',
+		available: true
+		}, {
+		id: 8,
+		type: 'ipad',
+		available: false
+		}, {
+		id: 9,
+		type: 'nexus',
+		available: true
+		}, {
+		id: 10,
+		type: 'nexus',
+		available: true
+		}, {
+		id: 11,
+		type: 'nexus',
+		available: false
+		}];
+		
+	return {
+		all: function(){
+		return laptops;
+		},
+		some: function(){
+		return tablets;
+		}
+	}
+	})
+		
+		
+
 .factory('Chats', function() {
   // Might use a resource here that returns a JSON array
 
