@@ -47,6 +47,24 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
       }
     }
   })
+  .state('tab.reserve', {
+    url: '/reserve',
+    views: {
+      'tab-reserve': {
+        templateUrl: 'templates/tab-reserve.html',
+        controller: 'ReserveCtrl'
+      }
+    }
+  })
+  .state('tab.reserve-detail', {
+    url: '/reserve/:device',
+    views: {
+      'tab-reserve': {
+        templateUrl: 'templates/reserve-detail.html',
+        controller: 'ReserveDetailCtrl'
+      }
+    }
+  })
 
   .state('tab.chats', {
       url: '/chats',

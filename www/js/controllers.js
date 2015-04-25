@@ -2,6 +2,11 @@ angular.module('starter.controllers', [])
 
 .controller('DashCtrl', function($scope) {})
 
+.controller('ReserveCtrl', function($scope, Devices) {
+	$scope.laptops = Devices.all();
+	$scope.tablets = Devices.some();
+})
+
 .controller('ChatsCtrl', function($scope, Chats) {
   $scope.chats = Chats.all();
   $scope.remove = function(chat) {
