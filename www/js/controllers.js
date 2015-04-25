@@ -81,8 +81,15 @@ angular.module('starter.controllers', [])
   $scope.chat = Chats.get($stateParams.chatId);
 })
 
-.controller('AccountCtrl', function($scope) {
-  $scope.settings = {
-    enableFriends: true
-  };
+.controller('AccountCtrl', function($scope, DataBase) {
+	$scope.settings = {
+		enableFriends: true
+	};
+	$scope.logout = function() {
+		console.log('logout');
+		data = { "type": "test", "owner": "Nicolas" };
+		$.post(DataBase.getPostURL(), data, function( result ) {
+			console.log( result );
+		});
+	};
 });

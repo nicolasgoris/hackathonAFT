@@ -7,6 +7,9 @@ angular.module('starter.services', [])
    $rootScope.content = '_design/views/_view/TypeData?key=';
 	$rootScope.reservations = '_design/views/_view/reservations?key=';
 	return {
+		getPostURL: function() {
+			return $rootScope.db;
+		},
 		getDBContent: function(type) {
 			return $rootScope.db + $rootScope.content + '"' + type + '"&callback=?';
 		},
