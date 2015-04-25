@@ -7,22 +7,22 @@
 				<a class="item item-icon-left item-icon-right" href="#">
 					<i class="icon ion-monitor"></i>
 					Reservation computers
-					<i class="icon ion-checkmark-round icon-green"></i>
+					<i class="icon" ng-class="{'ion-checkmark-round icon-green': services.computers , 'ion-close-round icon-red': !services.computers} "></i>
 				</a>
 				<a class="item item-icon-left item-icon-right" href="#">
 					<i class="icon ion-laptop"></i>
 					Reservation laptops
-					<i class="icon ion-checkmark-round icon-green"></i>
+					<i class="icon" ng-class="{'ion-checkmark-round icon-green': services.laptops , 'ion-close-round icon-red': !services.laptops} "></i>
 				</a>
 				<a class="item item-icon-left item-icon-right" href="#">
 					<i class="icon ion-videocamera"></i>
 					Reservation cameras
-					<i class="icon ion-close-round icon-red"></i>
+					<i class="icon" ng-class="{'ion-checkmark-round icon-green': services.videocameras , 'ion-close-round icon-red': !services.videocameras} "></i>
 				</a>
 				<a class="item item-icon-left item-icon-right" href="#">
 					<i class="icon ion-clipboard"></i>
 					Reservation study room
-					<i class="icon ion-checkmark-round icon-green"></i>
+					<i class="icon" ng-class="{'ion-checkmark-round icon-green': services.studyplaces , 'ion-close-round icon-red': !services.studyplaces} "></i>
 				</a>
 			</div>
       </div>
@@ -31,9 +31,11 @@
       <div class="item item-divider">News</div>
       <div class="item item-body">
         <div class="list">
-				<a class="item item-icon-left" href="#">
+				<a class="item item-icon-left" href="#" ng-repeat="newsItem in news">
 					<i class="icon ion-information-circled"></i>
-					New reservation tools
+					   	<p>{{ newsItem.title }}</p> 
+    					<p>{{ newsItem.body }}</p> 
+    					<span class="item-note" ng-bind="newsItem.startDate"></span>
 				</a>
 			</div>
       </div>
