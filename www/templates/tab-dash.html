@@ -32,10 +32,12 @@
       <div class="item item-body">
         <div class="list">
 				<a class="item item-icon-left" href="#" ng-repeat="newsItem in news">
+					<div ng-if="logica enddate > now">
 					<i class="icon ion-information-circled"></i>
 					   	<p>{{ newsItem.title }}</p> 
-    					<p>{{ newsItem.body }}</p> 
-    					<span class="item-note" ng-bind="newsItem.startDate"></span>
+    					<p>{{ newsItem.text }}</p>
+    					<span class="item-note">{{ newsItem.startdate | date}}</span>
+    				</div>
 				</a>
 			</div>
       </div>
