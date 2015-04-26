@@ -49,11 +49,36 @@ angular.module('starter.controllers', [])
 	});
 })
 
-.controller('ReservationCtrl', function($scope, DataBase, User) {
+.controller('ReservationCtrl', function($scope, $stateParams, DataBase, User) {
 	/*$http.get(DataBase.getDBContent('devices'))
 		.success(function (data) {
 		$scope.devices = data.rows;
 	});*/
+	$scope.$on( "$ionicView.enter", function( scopes, states ) {
+		if ($stateParams.deviceType != undefined){
+			if($stateParams.deviceType == "laptop"){
+				$scope.deviceType = "Laptops";
+			}
+			else {
+				$scope.deviceType = capitalize($stateParams.deviceType);
+			}
+			$.getJSON(DataBase.getDBContent('devices'), function(data) {
+				$scope.$apply(function() {
+					$scope.data = data.rows[0].value;
+					$scope.devices = [];
+					$.each($scope.data, function(key, value) {
+						if (value.type == $scope.deviceType.toLowerCase()) {
+							$.each(value.devices, function(key, value) {
+								if (value.available) {
+									$scope.devices.push(value);
+								}
+							});
+						}
+					});
+				});
+			});
+		}
+	});
 	var tempdate = new Date();
 	$scope.now = tempdate.toISOString().split('T')[0];
 	$scope.mindate1 = $scope.now;

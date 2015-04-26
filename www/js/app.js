@@ -52,7 +52,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 		views: {
 			'tab-dash': {
 				templateUrl: 'templates/reservations-detail.html',
-				controller: 'ReservationDetailCtrl'
+				controller: 'DashCtrl'
 			}
 		}
 	})
@@ -65,6 +65,15 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
       }
     }
   })
+	.state('tab.reserveSpecific', {
+		url: '/reserve/:deviceType',
+		views: {
+			'tab-reserve': {
+				templateUrl: 'templates/tab-reserve.html',
+				controller: 'ReservationCtrl'
+			}
+		}
+	})
   /*.state('tab.reserve-detail', {
     url: '/reserve/:device',
     views: {
