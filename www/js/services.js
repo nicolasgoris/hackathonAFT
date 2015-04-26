@@ -6,6 +6,7 @@ angular.module('starter.services', [])
 	$rootScope.db = 'https://' + $rootScope.key + ':' + $rootScope.pass + '@nicolas.cloudant.com/hackathonatf/';
 	$rootScope.content = '_design/views/_view/TypeData?key=';
 	$rootScope.reservations = '_design/views/_view/reservations';
+  $rootScope.deviceById = '_design/views/_view/deviceById';
 	return {
 		getPostURL: function() {
 			return $rootScope.db;
@@ -18,7 +19,10 @@ angular.module('starter.services', [])
 		},		
 		getReservationsByUser: function(snumber) {
 			return $rootScope.db + $rootScope.reservations +  'ByUser?key="' + snumber + '"&callback=?';
-		}
+		},
+    getDeviceById: function(id) {
+      return $rootScope.db + $rootScope.deviceById + '?key="' + id + '"&callback=?';
+    }
 	};
 })
 
