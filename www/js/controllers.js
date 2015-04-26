@@ -48,19 +48,32 @@ angular.module('starter.controllers', [])
 	});
 })
 
+.controller('ReservationDetailCtrl', function($scope, DataBase, User) {
+	$scope.today = new Date();
+	$scope.reservations = {"current": []};
+	$.getJSON(DataBase.getReservationsByUser(User.getUser().id) ,function(data){
+		$scope.$apply(function() {
+			var reservations = data.rows;
+			$.each(reservations, function(key, value) {
+				console.log(value);
+				var startdate = new Date(value.value.start);
+				var enddate = new Date(value.value.end);
+				enddate.setDate(enddate.getDate()+1);
+				if ($scope.today <= enddate) {
+					$.getJSON(DataBase.getDeviceById(value.value.device), function(data) {
+						value.value.device = data.rows[0].value;
+					})
+					$scope.reservations.current.push(value.value);
+				}
+			});
+		});
+	})
+})
+
 .controller('ReservationCtrl', function($scope, $stateParams, DataBase, User) {
-	/*$http.get(DataBase.getDBContent('devices'))
-		.success(function (data) {
-		$scope.devices = data.rows;
-	});*/
 	$scope.$on( "$ionicView.enter", function( scopes, states ) {
 		if ($stateParams.deviceType != undefined){
-			if($stateParams.deviceType == "laptop"){
-				$scope.deviceType = "Laptops";
-			}
-			else {
-				$scope.deviceType = capitalize($stateParams.deviceType);
-			}
+			$scope.deviceType = capitalize($stateParams.deviceType);
 			$.getJSON(DataBase.getDBContent('devices'), function(data) {
 				$scope.$apply(function() {
 					$scope.data = data.rows[0].value;
