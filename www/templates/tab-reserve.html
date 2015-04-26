@@ -24,13 +24,13 @@
 	<div class="list" ng-show="deviceType != undefined">
 		<label class="item item-input">
 			<span class="input-label">Start</span>
-			<input type="date" min="{{now}}" ng-model="newReservation.startDate" ng-change="startFilled()">
+			<input type="date" min="{{mindate1}}" max="{{maxdate1}}" ng-model="newReservation.startDate" ng-change="startFilled()">
 		</label>
 	</div>
 	<div class="list" ng-show="deviceType != undefined">
 		<label class="item item-input">
 			<span class="input-label">End</span>
-			<input type="date" min="{{mindate}}" ng-model="newReservation.endDate">
+			<input type="date" min="{{mindate}}" max="{{maxdate2}}" ng-model="newReservation.endDate">
 		</label>
 	</div>
 	<div class="list" ng-show="newReservation.endDate != undefined && deviceType != undefined && newReservation.actualDevice != undefined && newReservation.startDate != undefined">

@@ -56,9 +56,19 @@ angular.module('starter.controllers', [])
 		.success(function (data) {
 		$scope.devices = data.rows;
 	});*/
+<<<<<<< HEAD
+	var tempdate = new Date();
+	$scope.now = tempdate.toISOString().split('T')[0];
+	$scope.mindate1 = $scope.now;
+=======
 	$scope.reservation = {};
 	$scope.now = new Date().toISOString().split('T')[0];
+>>>>>>> master
 	$scope.mindate = $scope.now;
+	tempdate.setDate(tempdate.getDate()+13);
+	$scope.maxdate1 = tempdate.toISOString().split('T')[0];
+	tempdate.setDate(tempdate.getDate()+7);
+	$scope.maxdate2 = tempdate.toISOString().split('T')[0];
 	$scope.data = [];
 	$scope.types = [];
 	$scope.devices = [];
@@ -100,13 +110,20 @@ angular.module('starter.controllers', [])
 	});
 	$scope.startFilled = function(){
 		if($scope.newReservation.startDate != undefined){
+			if($scope.newReservation.startDate > $scope.newReservation.endDate){
+				$scope.newReservation.endDate = undefined;
+			}
 			var date = $scope.newReservation.startDate;
 			date.setDate(date.getDate()+1);
 			$scope.mindate = date.toISOString().split('T')[0];
+			date.setDate(date.getDate()+7);
+			$scope.maxdate2 = date.toISOString().split('T')[0];
 		}
 		else {
-			$scope.newReservation.endDate = undefined;
 			$scope.mindate = $scope.now;
+			var tempdate = new Date();
+			tempdate.setDate(tempdate.getDate()+20);
+			$scope.maxdate2 = tempdate.toISOString().split('T')[0];
 		}
 	};
 	$scope.saveReservation = function(){
