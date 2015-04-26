@@ -1,51 +1,69 @@
 angular.module('starter.controllers', [])
 
-.controller('DashCtrl', function($scope) {
-	$scope.services = {"computers":true, "laptops":true, "videocameras":false, "studyplaces":true};
+.controller('DashCtrl', function($scope, DataBase, User) {
 	$scope.today = new Date();
-	$scope.news = [
-		 {
-           "startdate": "2015-04-23",
-           "enddate": "2015-04-24",
-           "title": "wie maakte de laptops kapot?",
-           "text": "lala",
-           "img": ""
-       },
-       {
-           "startdate": "2015-04-24",
-           "enddate": "2015-04-25",
-           "title": "nieuwe goed APp",
-           "text": "de ontwikkeling van de nieuw APp is bijna klaar.",
-           "img": ""
-       },
-       {
-           "startdate": "2015-04-24",
-           "enddate": "2015-04-26",
-           "title": "wie maakte de laptops kapot?",
-           "text": "we hebben de laptops vorig weekend eens nagekeken en hebben vast gesteld dat er ongeveer een 5 tal laptops kapot zijn. We hebben nagetrokken wie dit zouden zijn maar we willen deze personen graag de kans geven om hier zelf voor uit te komen.",
-           "img": ""
-       }
-   ];
+	var services = [];
+	$.getJSON(DataBase.getDBContent('services'),function(data){
+		$scope.$apply(function() {
+			$scope.services = data.rows[0].value;
+			$.each($scope.services, function(key, value){
+				services.push(value);
+			});
+			$scope.services = services;
+		});
+	})
+
+	$scope.reservations = {};
+	$scope.reservations.current = [];
+	$scope.reservations.passed = [];
+	$.getJSON(DataBase.getReservationsByUser(User.getUser().id) ,function(data){
+		$scope.$apply(function() {
+			var reservations = data.rows;
+			$.each(reservations, function(key, value) {
+				var startdate = new Date(value.value.start);
+				var enddate = new Date(value.value.end);
+				enddate.setDate(enddate.getDate()+1);
+				if ($scope.today <= enddate) {
+					$scope.reservations.current.push(value.value);
+				}
+				else {
+					$scope.reservations.passed.push(value.value);
+				}
+				$scope.reservations;
+			});
+		});
+	})
+
 	var news = [];
-	$.each($scope.news, function(key, value) {
-		var startdate = new Date(value.startdate);
-		var enddate = new Date(value.enddate);
-		enddate.setDate(enddate.getDate()+1);
-		if ($scope.today > startdate && $scope.today < enddate) {
-			news.push(value);
-		}
+	$.getJSON(DataBase.getDBContent('news'), function(data) {
+		$scope.$apply(function() {
+			$scope.news  = data.rows[0].value;
+			$.each($scope.news, function(key, value) {
+				var startdate = new Date(value.startdate);
+				var enddate = new Date(value.enddate);
+				enddate.setDate(enddate.getDate()+1);
+				if ($scope.today > startdate && $scope.today < enddate) {
+					news.push(value);
+				}
+			});
+			$scope.news = news;
+		});
 	});
-	$scope.news = news;
 })
 
-.controller('ReservationCtrl', function($scope, $http, DataBase) {
+.controller('ReservationCtrl', function($scope, DataBase, User) {
 	/*$http.get(DataBase.getDBContent('devices'))
 		.success(function (data) {
 		$scope.devices = data.rows;
 	});*/
+<<<<<<< HEAD
 	var tempdate = new Date();
 	$scope.now = tempdate.toISOString().split('T')[0];
 	$scope.mindate1 = $scope.now;
+=======
+	$scope.reservation = {};
+	$scope.now = new Date().toISOString().split('T')[0];
+>>>>>>> master
 	$scope.mindate = $scope.now;
 	tempdate.setDate(tempdate.getDate()+13);
 	$scope.maxdate1 = tempdate.toISOString().split('T')[0];
@@ -57,9 +75,13 @@ angular.module('starter.controllers', [])
 	$scope.newReservation = [];
 	$.getJSON(DataBase.getDBContent('devices'), function(data) {
 		$scope.$apply(function() {
-			$scope.data = data.rows[0];
-			$.each($scope.data.value, function(key, value) {
-				$scope.types.push(capitalize(value.type));
+			$scope.data = data.rows[0].value;
+			$.each($scope.data, function(key, value) {
+				$scope.types.push(value.type);
+				$scope.data = data.rows[0];
+				$.each($scope.data.value, function(key, value) {
+					$scope.types.push(capitalize(value.type));
+				});
 			});
 		});
 	});
@@ -107,11 +129,32 @@ angular.module('starter.controllers', [])
 	$scope.saveReservation = function(){
 		var date = $scope.newReservation.endDate;
 		date.setDate(date.getDate()+1);
-		$scope.reservation = [];
-		$scope.reservation.startDate = $scope.newReservation.startDate.toISOString().split('T')[0];
-		$scope.reservation.endDate = date.toISOString().split('T')[0];
-		$scope.reservation.device = $scope.newReservation.actualDevice;
+		$scope.reservation.type = 'reservation';
+		$scope.reservation.device = $scope.newReservation.actualDevice.id;
+		$scope.reservation.snumber = User.getUser().id;
+		$scope.reservation.end = date.toISOString().split('T')[0];
+		$scope.reservation.start = $scope.newReservation.startDate.toISOString().split('T')[0];
+		$scope.reservation.valid = true;
 		console.log($scope.reservation);
+		var json = JSON.stringify($scope.reservation);
+		console.log(json);
+		$.ajax({
+			type:	'POST',
+			url:	DataBase.getPostURL(),
+			data:	json,
+			xhrFields: {
+				withCredentials: true
+			},
+			contentType: 'application/json',
+			async:	true,
+			success:function(data){
+				console.log('success');
+				console.log(data);
+			},
+			error: function(XMLHttpRequest, textStatus, errorThrown){
+				console.log(errorThrown); 
+			}
+		});
 	};
 })
 
@@ -132,9 +175,5 @@ angular.module('starter.controllers', [])
 	};
 	$scope.logout = function() {
 		console.log('logout');
-		data = { "type": "test", "owner": "Nicolas" };
-		$.post(DataBase.getPostURL(), data, function( result ) {
-			console.log( result );
-		});
 	};
 });
