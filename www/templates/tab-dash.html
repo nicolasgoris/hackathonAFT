@@ -4,7 +4,7 @@
       <div class="item item-divider">Services</div>
       <div class="item item-body">
 			<div class="list">
-				<a class="item item-icon-left item-icon-right" href="#" ng-repeat="service in services">
+				<a class="item item-icon-left item-icon-right" href="#/tab/reserve/{{service.service}}" ng-repeat="service in services">
 					<i class="icon ion-{{service.service}}"></i>
 					Reservation {{service.service}}
 					<i class="icon" ng-class="{'ion-checkmark-round icon-green': service.availability , 'ion-close-round icon-red': !service.availability} "></i>
