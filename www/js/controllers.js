@@ -195,10 +195,11 @@ angular.module('starter.controllers', [])
 				$scope.newReservation.endDate = undefined;
 			}
 			var date = $scope.newReservation.startDate;
-			date.setDate(date.getDate()+1);
-			$scope.mindate = date.toISOString().split('T')[0];
-			date.setDate(date.getDate()+7);
-			$scope.maxdate2 = date.toISOString().split('T')[0];
+			var tempdate = new Date();
+			tempdate.setDate(date.getDate()+1);
+			$scope.mindate = tempdate.toISOString().split('T')[0];
+			tempdate.setDate(tempdate.getDate()+7);
+			$scope.maxdate2 = tempdate.toISOString().split('T')[0];
 		}
 		else {
 			$scope.mindate = $scope.now;
@@ -210,12 +211,14 @@ angular.module('starter.controllers', [])
 	$scope.saveReservation = function(){
 		var date = $scope.newReservation.endDate;
 		date.setDate(date.getDate()+1);
+		var date2 = $scope.newReservation.startDate;
+		date2.setDate(date2.getDate()+1);
 		$scope.reservation = {};
 		$scope.reservation.type = 'reservation';
 		$scope.reservation.device = $scope.newReservation.actualDevice.id;
 		$scope.reservation.snumber = User.getUser().id;
 		$scope.reservation.end = date.toISOString().split('T')[0];
-		$scope.reservation.start = $scope.newReservation.startDate.toISOString().split('T')[0];
+		$scope.reservation.start = date2.toISOString().split('T')[0];
 		$scope.reservation.valid = true;
 		var json = JSON.stringify($scope.reservation);
 		$.ajax({
