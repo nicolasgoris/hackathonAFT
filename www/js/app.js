@@ -56,7 +56,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
       }
     }
   })
-  .state('tab.reserve-detail', {
+  /*.state('tab.reserve-detail', {
     url: '/reserve/:device',
     views: {
       'tab-reserve': {
@@ -64,8 +64,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
         controller: 'ReserveDetailCtrl'
       }
     }
-  })
-
+  })*/
   .state('tab.chats', {
       url: '/chats',
       views: {
@@ -85,15 +84,25 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
       }
     })
 
-  .state('tab.account', {
-    url: '/account',
-    views: {
-      'tab-account': {
-        templateUrl: 'templates/tab-account.html',
-        controller: 'AccountCtrl'
-      }
-    }
-  });
+	.state('tab.account', {
+		url: '/account',
+		views: {
+			'tab-account': {
+				templateUrl: 'templates/tab-account.html',
+				controller: 'AccountCtrl'
+			}
+		}
+	})
+	.state('tab.reservations', {
+		url: '/account/reservations',
+		views: {
+			'tab-account': {
+				templateUrl: 'templates/reservations-detail.html',
+				controller: 'DashCtrl'
+			}
+		}
+	})
+	;
 
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/tab/dash');
