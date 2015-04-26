@@ -38,11 +38,12 @@ angular.module('starter.controllers', [])
 	$scope.news = news;
 })
 
-.controller('ReservationCtrl', function($scope, $http, DataBase) {
+.controller('ReservationCtrl', function($scope, DataBase, User) {
 	/*$http.get(DataBase.getDBContent('devices'))
 		.success(function (data) {
 		$scope.devices = data.rows;
 	});*/
+	$scope.reservation = {};
 	$scope.now = new Date().toISOString().split('T')[0];
 	$scope.mindate = $scope.now;
 	$scope.data = [];
@@ -94,11 +95,32 @@ angular.module('starter.controllers', [])
 	$scope.saveReservation = function(){
 		var date = $scope.newReservation.endDate;
 		date.setDate(date.getDate()+1);
-		$scope.reservation = [];
-		$scope.reservation.startDate = $scope.newReservation.startDate.toISOString().split('T')[0];
-		$scope.reservation.endDate = date.toISOString().split('T')[0];
-		$scope.reservation.device = $scope.newReservation.actualDevice;
+		$scope.reservation.type = 'reservation';
+		$scope.reservation.device = $scope.newReservation.actualDevice.id;
+		$scope.reservation.snumber = User.getUser().id;
+		$scope.reservation.end = date.toISOString().split('T')[0];
+		$scope.reservation.start = $scope.newReservation.startDate.toISOString().split('T')[0];
+		$scope.reservation.valid = true;
 		console.log($scope.reservation);
+		var json = JSON.stringify($scope.reservation);
+		console.log(json);
+		$.ajax({
+			type:	'POST',
+			url:	DataBase.getPostURL(),
+			data:	json,
+			xhrFields: {
+				withCredentials: true
+			},
+			contentType: 'application/json',
+			async:	true,
+			success:function(data){
+				console.log('success');
+				console.log(data);
+			},
+			error: function(XMLHttpRequest, textStatus, errorThrown){
+				console.log(errorThrown); 
+			}
+		});
 	};
 })
 
@@ -119,9 +141,5 @@ angular.module('starter.controllers', [])
 	};
 	$scope.logout = function() {
 		console.log('logout');
-		data = { "type": "test", "owner": "Nicolas" };
-		$.post(DataBase.getPostURL(), data, function( result ) {
-			console.log( result );
-		});
 	};
 });
