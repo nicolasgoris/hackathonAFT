@@ -8,8 +8,12 @@ angular.module('starter.services', [])
 	$rootScope.content = '_design/views/_view/TypeData?key=';
 =======
     $rootScope.content = '_design/views/_view/TypeData?key=';
+<<<<<<< HEAD
+	$rootScope.reservations = '_design/views/_view/reservations';
+=======
 >>>>>>> ad3ef86
 	$rootScope.reservations = '_design/views/_view/reservations?key=';
+>>>>>>> master
 	return {
 		getPostURL: function() {
 			return $rootScope.db;
@@ -17,8 +21,11 @@ angular.module('starter.services', [])
 		getDBContent: function(type) {
 			return $rootScope.db + $rootScope.content + '"' + type + '"&callback=?';
 		},
-		getReservations: function(snumber) {
-			return $rootScope.db + $rootScope.reservations + '"' + snumber + '"&callback=?';
+		getReservationsByDevice: function(device) {
+			return $rootScope.db + $rootScope.reservations + 'ByDevice?key="' + device + '"&callback=?';
+		},		
+		getReservationsByUser: function(snumber) {
+			return $rootScope.db + $rootScope.reservations +  'ByUser?key="' + snumber + '"&callback=?';
 		}
 	};
 })
