@@ -49,28 +49,47 @@ angular.module('starter.controllers', [])
     });
 	})
 
-.controller('ReservationCtrl', function($scope, $http, DataBase) {
+.controller('ReservationCtrl', function($scope, DataBase, User) {
 	/*$http.get(DataBase.getDBContent('devices'))
 		.success(function (data) {
 		$scope.devices = data.rows;
 	});*/
+	$scope.reservation = {};
+	$scope.now = new Date().toISOString().split('T')[0];
+	$scope.mindate = $scope.now;
 	$scope.data = [];
 	$scope.types = [];
 	$scope.devices = [];
 	$scope.newReservation = [];
 	$.getJSON(DataBase.getDBContent('devices'), function(data) {
 		$scope.$apply(function() {
+<<<<<<< HEAD
 			$scope.data = data.rows[0].value;
 			$.each($scope.data, function(key, value) {
 				$scope.types.push(value.type);
+=======
+			$scope.data = data.rows[0];
+			$.each($scope.data.value, function(key, value) {
+				$scope.types.push(capitalize(value.type));
+>>>>>>> master
 			});
 		});
 	});
+	function capitalize(string){
+		var newString = string;
+		if (itemIsLowerCaseLetter(string.charAt(0))){
+			newString = string.charAt(0).toUpperCase() + string.substring(1, string.length);
+		}
+		return newString;
+	}
+	function itemIsLowerCaseLetter(item) {
+        return item.toUpperCase().toLowerCase() === item;
+    };
 	$("select[name='devicetype']").change(function() {
 		var devicetype = $( this ).val();
 		$scope.devices = [];
 		$.each($scope.data.value, function(key, value) {
-			if (value.type == devicetype) {
+			if (value.type == devicetype.toLowerCase()) {
 				$.each(value.devices, function(key, value) {
 					if (value.available) {
 						$scope.devices.push(value);
@@ -79,6 +98,47 @@ angular.module('starter.controllers', [])
 			}
 		});
 	});
+	$scope.startFilled = function(){
+		if($scope.newReservation.startDate != undefined){
+			var date = $scope.newReservation.startDate;
+			date.setDate(date.getDate()+1);
+			$scope.mindate = date.toISOString().split('T')[0];
+		}
+		else {
+			$scope.newReservation.endDate = undefined;
+			$scope.mindate = $scope.now;
+		}
+	};
+	$scope.saveReservation = function(){
+		var date = $scope.newReservation.endDate;
+		date.setDate(date.getDate()+1);
+		$scope.reservation.type = 'reservation';
+		$scope.reservation.device = $scope.newReservation.actualDevice.id;
+		$scope.reservation.snumber = User.getUser().id;
+		$scope.reservation.end = date.toISOString().split('T')[0];
+		$scope.reservation.start = $scope.newReservation.startDate.toISOString().split('T')[0];
+		$scope.reservation.valid = true;
+		console.log($scope.reservation);
+		var json = JSON.stringify($scope.reservation);
+		console.log(json);
+		$.ajax({
+			type:	'POST',
+			url:	DataBase.getPostURL(),
+			data:	json,
+			xhrFields: {
+				withCredentials: true
+			},
+			contentType: 'application/json',
+			async:	true,
+			success:function(data){
+				console.log('success');
+				console.log(data);
+			},
+			error: function(XMLHttpRequest, textStatus, errorThrown){
+				console.log(errorThrown); 
+			}
+		});
+	};
 })
 
 .controller('ChatsCtrl', function($scope, Chats) {
@@ -92,8 +152,11 @@ angular.module('starter.controllers', [])
   $scope.chat = Chats.get($stateParams.chatId);
 })
 
-.controller('AccountCtrl', function($scope) {
-  $scope.settings = {
-    enableFriends: true
-  };
+.controller('AccountCtrl', function($scope, DataBase) {
+	$scope.settings = {
+		enableFriends: true
+	};
+	$scope.logout = function() {
+		console.log('logout');
+	};
 });
