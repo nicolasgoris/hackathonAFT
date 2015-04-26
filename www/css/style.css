@@ -6,3 +6,36 @@
 .icon-red {
 	color: red;
 }
+.ion-computer:before {
+content: "\f20a";
+}
+.ion-tablet:before {
+content: "\f1f9";
+}
+.ion-photocamera:before {
+content: "\f118";
+}
+.ion-microphone:before {
+content: "\f205";
+}
+.ion-studyplace:before {
+content: "\f127";
+}
+.ion-computer:before,
+.ion-tablet:before,
+.ion-photocamera:before,
+.ion-microphone:before,
+.ion-studyplace:before
+{
+  display: inline-block;
+  font-family: "Ionicons";
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  text-rendering: auto;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

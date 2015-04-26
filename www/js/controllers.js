@@ -1,8 +1,37 @@
 angular.module('starter.controllers', [])
 
 .controller('DashCtrl', function($scope, DataBase) {
-	$scope.services = {"computers":true, "laptops":true, "videocameras":false, "studyplaces":true};
-	$scope.today = new Date();
+
+  $scope.today = new Date();
+
+  var services = [];
+  $.getJSON(DataBase.getDBContent('services'),function(data){
+    $scope.$apply(function() {
+      $scope.services = data.rows[0].value;
+      $.each($scope.services, function(key, value){
+        services.push(value);
+      });
+      $scope.services = services;
+    });
+  })
+
+  var reservations = [];
+  $.getJSON(DataBase.getReservationsByUser('s081708@ap.be'),function(data){
+    $scope.$apply(function() {
+      $scope.reservations = data.rows[0].value;
+      $.each($scope.reservations, function(key, value) {
+        var startdate = new Date(value.startdate);
+        var enddate = new Date(value.enddate);
+        enddate.setDate(enddate.getDate()+1);
+        if ($scope.today > startdate && $scope.today < enddate) {
+          reservations.push(value);
+        }
+      $scope.reservations = reservations;
+      });
+    });
+  })
+
+
   var news = [];
   $.getJSON(DataBase.getDBContent('news'), function(data) {
     $scope.$apply(function() {
@@ -31,8 +60,8 @@ angular.module('starter.controllers', [])
 	$scope.newReservation = [];
 	$.getJSON(DataBase.getDBContent('devices'), function(data) {
 		$scope.$apply(function() {
-			$scope.data = data.rows[0];
-			$.each($scope.data.value, function(key, value) {
+			$scope.data = data.rows[0].value;
+			$.each($scope.data, function(key, value) {
 				$scope.types.push(value.type);
 			});
 		});
