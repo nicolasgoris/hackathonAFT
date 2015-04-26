@@ -7,10 +7,11 @@
 				Device Type
 			</div>
 		<select name="devicetype" ng-model="deviceType">
-			<option ng-repeat="type in types" value="{{type}}">{{type}}</option> <!-- ToDO: first letter capatalize -->
+			<option ng-repeat="type in types" ng-selected="deviceType == type" value="{{type}}">{{type}}</option>
 		</select>
 	</label>
 	</div>
+	<div>{{deviceType}}</div>
 	<div class="list" ng-show="deviceType != undefined">
 		<label class="item item-input item-select">
 			<div class="input-label">
