@@ -4,16 +4,8 @@ angular.module('starter.services', [])
 	$rootScope.key = 'ndirmrstimeatcheringplec';
 	$rootScope.pass = 'Xa3utsiV0mbi8qI3HAp6UYKa';
 	$rootScope.db = 'https://' + $rootScope.key + ':' + $rootScope.pass + '@nicolas.cloudant.com/hackathonatf/';
-<<<<<<< HEAD
 	$rootScope.content = '_design/views/_view/TypeData?key=';
-=======
-    $rootScope.content = '_design/views/_view/TypeData?key=';
-<<<<<<< HEAD
 	$rootScope.reservations = '_design/views/_view/reservations';
-=======
->>>>>>> ad3ef86
-	$rootScope.reservations = '_design/views/_view/reservations?key=';
->>>>>>> master
 	return {
 		getPostURL: function() {
 			return $rootScope.db;
