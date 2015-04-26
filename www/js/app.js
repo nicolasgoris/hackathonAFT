@@ -52,7 +52,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 		views: {
 			'tab-dash': {
 				templateUrl: 'templates/reservations-detail.html',
-				controller: 'DashCtrl'
+				controller: 'ReservationDetailCtrl'
 			}
 		}
 	})

@@ -5,72 +5,127 @@ angular.module('starter.controllers', [])
 	$scope.news = [];
 	$scope.reservations = {"current": [], "passed": []};
 	
-	$.getJSON(DataBase.getDBContent('services'),function(data){
-		$scope.$apply(function() {
-			$scope.services = data.rows[0].value;
-		});
-	})
-
-	$.getJSON(DataBase.getReservationsByUser(User.getUser().id) ,function(data){
-		$scope.$apply(function() {
-			var reservations = data.rows;
-			$.each(reservations, function(key, value) {
-				var startdate = new Date(value.value.start);
-				var enddate = new Date(value.value.end);
-				enddate.setDate(enddate.getDate()+1);
-				if ($scope.today <= enddate) {
-					$scope.reservations.current.push(value.value);
-				}
-				else {
-					$scope.reservations.passed.push(value.value);
-				}
+	$scope.refreshServices = function() {
+		$.getJSON(DataBase.getDBContent('services'),function(data){
+			$scope.$apply(function() {
+				$scope.services = data.rows[0].value;
 			});
 		});
-	})
-
-	$.getJSON(DataBase.getDBContent('news'), function(data) {
-		$scope.$apply(function() {
-			$.each(data.rows[0].value, function(key, value) {
-				var startdate = new Date(value.startdate);
-				var enddate = new Date(value.enddate);
-				enddate.setDate(enddate.getDate()+1);
-				if ($scope.today > startdate && $scope.today < enddate) {
-					$scope.news.push(value);
-				}
+	};
+	
+	$scope.refreshReservations = function() {
+		$.getJSON(DataBase.getReservationsByUser(User.getUser().id) ,function(data){
+			$scope.$apply(function() {
+				var reservations = data.rows;
+				$.each(reservations, function(key, value) {
+					var startdate = new Date(value.value.start);
+					var enddate = new Date(value.value.end);
+					enddate.setDate(enddate.getDate()+1);
+					if ($scope.today <= enddate) {
+						$scope.reservations.current.push(value.value);
+					}
+					else {
+						$scope.reservations.passed.push(value.value);
+					}
+				});
 			});
 		});
-	});
+	};
+	
+	$scope.refreshNews = function() {
+		$.getJSON(DataBase.getDBContent('news'), function(data) {
+			$scope.$apply(function() {
+				$.each(data.rows[0].value, function(key, value) {
+					var startdate = new Date(value.startdate);
+					var enddate = new Date(value.enddate);
+					enddate.setDate(enddate.getDate()+1);
+					if ($scope.today > startdate && $scope.today < enddate) {
+						$scope.news.push(value);
+					}
+				});
+			});
+		});
+	};
+	
+	$scope.refresh = function() {
+		$scope.today = new Date();
+		$scope.news = [];
+		$scope.reservations = {"current": [], "passed": []};
+		$scope.refreshServices();
+		$scope.refreshReservations();
+		$scope.refreshNews();
+	};
+	
+	$scope.refresh();
 	
 	$scope.$on( "$ionicView.enter", function( scopes, states ) {
 		if( states.fromCache && states.stateName == "tab.dash" ) {
-			console.log('other tab');
+			$scope.refresh();
+		};
+	});
+})
+
+.controller('ReservationDetailCtrl', function($scope, $location, DataBase, User) {
+	$scope.refreshReservations = function() {
+		$scope.today = new Date();
+		$scope.reservations = {"current": []};
+		$.getJSON(DataBase.getReservationsByUser(User.getUser().id) ,function(data){
+			$scope.$apply(function() {
+				var reservations = data.rows;
+				$.each(reservations, function(key, value) {
+					var startdate = new Date(value.value.start);
+					var enddate = new Date(value.value.end);
+					enddate.setDate(enddate.getDate()+1);
+					if ($scope.today <= enddate) {
+						$.getJSON(DataBase.getDeviceById(value.value.device), function(data) {
+							value.value.device = data.rows[0].value;
+						});
+						$scope.reservations.current.push(value.value);
+					};
+				});
+				$scope.reservations.current.sort(function(a, b) { return new Date(a.start).getTime() > new Date(b.start).getTime() } );
+			});
+		});
+	};
+	
+	$scope.remove = function(reservation) {
+		var device = reservation.device.id
+		reservation.device = device;
+		delete reservation.$$hashKey;
+		reservation.valid = false;
+		console.log(reservation);
+		console.log(DataBase.getPostURL() + reservation._id);
+		var json = JSON.stringify(reservation);
+		console.log(reservation);
+		$.ajax({
+			type:	'PUT',
+			url:	DataBase.getPostURL() + reservation._id,
+			data:	json,
+			xhrFields: {
+				withCredentials: true
+			},
+			contentType: 'application/json',
+			async:	true,
+			success:function(data){
+				$location.path("#/dash");
+				window.location.replace("#/dash");
+			},
+			error: function(XMLHttpRequest, textStatus, errorThrown){
+				console.log(errorThrown); 
+			}
+		});
+	}
+	
+	$scope.refreshReservations();
+	
+	$scope.$on( "$ionicView.enter", function( scopes, states ) {
+		if( states.fromCache && states.stateName == "tab.reservations" ) {
+			$scope.refreshReservations();
 		}
 	});
 })
 
-.controller('ReservationDetailCtrl', function($scope, DataBase, User) {
-	$scope.today = new Date();
-	$scope.reservations = {"current": []};
-	$.getJSON(DataBase.getReservationsByUser(User.getUser().id) ,function(data){
-		$scope.$apply(function() {
-			var reservations = data.rows;
-			$.each(reservations, function(key, value) {
-				console.log(value);
-				var startdate = new Date(value.value.start);
-				var enddate = new Date(value.value.end);
-				enddate.setDate(enddate.getDate()+1);
-				if ($scope.today <= enddate) {
-					$.getJSON(DataBase.getDeviceById(value.value.device), function(data) {
-						value.value.device = data.rows[0].value;
-					})
-					$scope.reservations.current.push(value.value);
-				}
-			});
-		});
-	})
-})
-
-.controller('ReservationCtrl', function($scope, $stateParams, DataBase, User) {
+.controller('ReservationCtrl', function($scope, $stateParams, $location, DataBase, User) {
 	$scope.$on( "$ionicView.enter", function( scopes, states ) {
 		if ($stateParams.deviceType != undefined){
 			$scope.deviceType = capitalize($stateParams.deviceType);
@@ -162,9 +217,7 @@ angular.module('starter.controllers', [])
 		$scope.reservation.end = date.toISOString().split('T')[0];
 		$scope.reservation.start = $scope.newReservation.startDate.toISOString().split('T')[0];
 		$scope.reservation.valid = true;
-		console.log($scope.reservation);
 		var json = JSON.stringify($scope.reservation);
-		console.log(json);
 		$.ajax({
 			type:	'POST',
 			url:	DataBase.getPostURL(),
@@ -175,8 +228,8 @@ angular.module('starter.controllers', [])
 			contentType: 'application/json',
 			async:	true,
 			success:function(data){
-				console.log('success');
-				console.log(data);
+				$location.path("#/dash");
+				window.location.replace("#/dash");
 			},
 			error: function(XMLHttpRequest, textStatus, errorThrown){
 				console.log(errorThrown); 
