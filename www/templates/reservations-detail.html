@@ -8,13 +8,19 @@
 						Current reservations
 						<span class="badge badge-balanced">{{reservations.current.length}}</span>
 					</a>
-					<div class="list" ng-repeat="reservation in reservations.current">
-						<a class="item item-icon-right" href="#">
-							<!--<i class="icon ion-"></i>-->
-							{{reservation.start}} - {{reservation.end}}
-							<span class="item-note">{{reservation.device}}</span>
-						</a>
-					</div>
+					<!--<div class="list" ng-repeat="reservation in reservations.current">-->
+					<ion-list>
+						<ion-item class="item-remove-animate" ng-repeat="reservation in reservations.current" type="item-text-wrap" href="#">
+							<!--<div class="item item-divider">{{ reservation.device.name }}</div>
+							{{reservation.start | date: "dd/MM"}} - {{reservation.end | date: "dd/MM/yyyy"}}-->
+							<h2>{{ reservation.device.name }}</h2>
+							<p>{{reservation.start | date: "dd/MM"}} - {{reservation.end | date: "dd/MM/yyyy"}}</p>
+							<ion-option-button class="button-assertive" ng-click="remove(reservation)">
+          						Delete
+        					</ion-option-button>
+							<!--<i class="icon ion-close-round icon-red"></i>-->
+						</ion-item>
+					</ion-list>
 				</div>
 			</div>
 		</div>
