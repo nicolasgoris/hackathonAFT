@@ -4,29 +4,17 @@ angular.module('starter.services', [])
 	$rootScope.key = 'ndirmrstimeatcheringplec';
 	$rootScope.pass = 'Xa3utsiV0mbi8qI3HAp6UYKa';
 	$rootScope.db = 'https://' + $rootScope.key + ':' + $rootScope.pass + '@nicolas.cloudant.com/hackathonatf/';
-	$rootScope.content = '_design/views/_view/TypeData?key=';
-	$rootScope.reservations = '_design/views/_view/reservations?key=';
+    $rootScope.content = '_design/views/_view/TypeData?key=';
+	$rootScope.reservations = '_design/views/_view/reservations';
 	return {
-		getPostURL: function() {
-			return $rootScope.db;
-		},
 		getDBContent: function(type) {
 			return $rootScope.db + $rootScope.content + '"' + type + '"&callback=?';
 		},
-		getReservations: function(snumber) {
-			return $rootScope.db + $rootScope.reservations + '"' + snumber + '"&callback=?';
-		}
-	};
-})
-
-.factory('User', function($rootScope) {
-	$rootScope.user = [];
-	$rootScope.user.id = 's081708@ap.be';
-	$rootScope.user.name = 'Nicolas Goris';
-	$rootScope.user.mail = 'nicolas.goris@student.ap.be';
-	return {
-		getUser: function() {
-			return $rootScope.user;
+		getReservationsByDevice: function(device) {
+			return $rootScope.db + $rootScope.reservations + 'ByDevice?key="' + device + '"&callback=?';
+		},		
+		getReservationsByUser: function(snumber) {
+			return $rootScope.db + $rootScope.reservations +  'ByUser?key="' + snumber + '"&callback=?';
 		}
 	};
 })
